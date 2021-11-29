@@ -44,7 +44,7 @@ hook.Add("TTTBeginRound", "TTT_RoleCount_Start", function()
 	local spectators = 0
 
 	for _, ply in pairs(player.GetAll()) do
-		if (!ply:IsSpec()) then
+		if (not ply:IsSpec()) then
 			plyInRound[ply:EntIndex()] = ply
 		else
 			spectators = spectators + 1
@@ -108,7 +108,7 @@ hook.Add("PlayerDisconnected", "TTT_RoleCount_Leave", function(ply)
 				net.WriteUInt(ply:GetRole(), 3)
 				-- Spectator Deathmatch support
 				if (file.Exists("sh_spectator_deathmatch.lua", "LUA")) then
-					net.WriteBool(!ply:IsGhost() and ply:Alive())
+					net.WriteBool(not ply:IsGhost() and ply:Alive())
 				else
 					net.WriteBool(ply:Alive())
 				end
