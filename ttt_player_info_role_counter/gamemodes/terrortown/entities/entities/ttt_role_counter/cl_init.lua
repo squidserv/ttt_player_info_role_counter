@@ -1,14 +1,13 @@
 -- author "Zaratusa"
 -- contact "http://steamcommunity.com/profiles/76561198032479768"
 
-local ROLE_SPECTATOR = 3
 -- save colors and strings for easy access
 local teams = {
-	[TEAM_INNOCENT] = {string = " innocent", color = GetRoleTeamColor(ROLE_TEAM_INNOCENT)},
-	[TEAM_DETECTIVE] = {string = " detective", color = GetRoleTeamColor(ROLE_TEAM_DETECTIVE)},
-	[TEAM_TRAITOR] = {string = " traitor", color = GetRoleTeamColor(ROLE_TEAM_TRAITOR)},
-	[TEAM_OTHER] = {string = " other role", color = GetRoleTeamColor(ROLE_TEAM_INDEPENDENT)},
-	[TEAM_SPECTATOR] = {color = Color(255, 255, 0, 255)}
+	[ROLE_TEAM_INNOCENT] = {string = " innocent", color = GetRoleTeamColor(ROLE_TEAM_INNOCENT)},
+	[ROLE_TEAM_DETECTIVE] = {string = " detective", color = GetRoleTeamColor(ROLE_TEAM_DETECTIVE)},
+	[ROLE_TEAM_TRAITOR] = {string = " traitor", color = GetRoleTeamColor(ROLE_TEAM_TRAITOR)},
+	[ROLE_TEAM_INDEPENDENT] = {string = " other role", color = GetRoleTeamColor(ROLE_TEAM_INDEPENDENT)},
+	[ROLE_NONE] = {color = Color(255, 255, 0, 255)}
 }
 
 net.Receive("TTT_RoleCount_Start", function()
@@ -20,24 +19,24 @@ net.Receive("TTT_RoleCount_Start", function()
 
 	chat.AddText(
 			color_white, "There are ",
-			teams[TEAM_INNOCENT].color, innocents .. teams[TEAM_INNOCENT].string .. "(s)",
+			teams[ROLE_TEAM_INNOCENT].color, innocents .. teams[ROLE_TEAM_INNOCENT].string .. "(s)",
 			color_white,", ",
-			teams[TEAM_DETECTIVE].color, detectives .. teams[TEAM_DETECTIVE].string .. "(s)",
+			teams[ROLE_TEAM_DETECTIVE].color, detectives .. teams[ROLE_TEAM_DETECTIVE].string .. "(s)",
 			color_white, ", ",
-			teams[TEAM_TRAITOR].color, traitors .. teams[TEAM_TRAITOR].string .. "(s)",
+			teams[ROLE_TEAM_TRAITOR].color, traitors .. teams[ROLE_TEAM_TRAITOR].string .. "(s)",
 			color_white, ", and ",
-			teams[TEAM_OTHER].color, others .. teams[TEAM_OTHER].string .. "(s)",
+			teams[ROLE_TEAM_INDEPENDENT].color, others .. teams[ROLE_TEAM_INDEPENDENT].string .. "(s)",
 			color_white, " this round!"
 	)
 
 	if (spectators ~= 1) then
 		chat.AddText(
-			roles[ROLE_SPECTATOR].color, spectators .. " players",
+			teams[ROLE_NONE].color, spectators .. " players",
 			color_white, " are spectating the Trouble in this Terrorist Town."
 		)
 	else
 		chat.AddText(
-			roles[ROLE_SPECTATOR].color, "1 player",
+			teams[ROLE_NONE].color, "1 player",
 			color_white, " is spectating the Trouble in this Terrorist Town."
 		)
 	end
@@ -51,13 +50,13 @@ net.Receive("TTT_RoleCount_Say", function()
 
 	chat.AddText(
 			color_white, "There are currently ",
-			teams[TEAM_INNOCENT].color, innocents .. teams[TEAM_INNOCENT].string .. "(s)",
+			teams[ROLE_TEAM_INNOCENT].color, innocents .. teams[ROLE_TEAM_INNOCENT].string .. "(s)",
 			color_white,", ",
-			teams[TEAM_DETECTIVE].color, detectives .. teams[TEAM_DETECTIVE].string .. "(s)",
+			teams[ROLE_TEAM_DETECTIVE].color, detectives .. teams[ROLE_TEAM_DETECTIVE].string .. "(s)",
 			color_white, ", ",
-			teams[TEAM_TRAITOR].color, traitors .. teams[TEAM_TRAITOR].string .. "(s)",
+			teams[ROLE_TEAM_TRAITOR].color, traitors .. teams[ROLE_TEAM_TRAITOR].string .. "(s)",
 			color_white, ", and ",
-			teams[TEAM_OTHER].color, others .. teams[TEAM_OTHER].string .. "(s)",
+			teams[ROLE_TEAM_INDEPENDENT].color, others .. teams[ROLE_TEAM_INDEPENDENT].string .. "(s)",
 			color_white, " this round!"
 	)
 end)

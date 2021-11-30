@@ -23,19 +23,19 @@ local waitTime = 20 -- time before one of the chat commands can be used again
 
 local function WriteRoleDistribution()
 	local teams = {}
-	teams[TEAM_INNOCENT] = #player.GetTeamPlayers(ROLE_TEAM_INNOCENT, false, false)
-	teams[TEAM_DETECTIVE] = #player.GetTeamPlayers(ROLE_TEAM_DETECTIVE, false, false)
-	teams[TEAM_TRAITOR] = #player.GetTeamPlayers(ROLE_TEAM_TRAITOR, false, false)
+	teams[ROLE_TEAM_INNOCENT] = #player.GetTeamPlayers(ROLE_TEAM_INNOCENT, false, false)
+	teams[ROLE_TEAM_DETECTIVE] = #player.GetTeamPlayers(ROLE_TEAM_DETECTIVE, false, false)
+	teams[ROLE_TEAM_TRAITOR] = #player.GetTeamPlayers(ROLE_TEAM_TRAITOR, false, false)
 
 	local indep = #player.GetTeamPlayers(ROLE_TEAM_INDEPENDENT, false, false)
 	local monster = #player.GetTeamPlayers(ROLE_TEAM_MONSTER, false, false)
 	local jester = #player.GetTeamPlayers(ROLE_TEAM_JESTER, false, false)
-	teams[TEAM_OTHER] = indep + monster + jester
+	teams[ROLE_TEAM_INDEPENDENT] = indep + monster + jester
 
-	net.WriteUInt(teams[TEAM_INNOCENT], 6)
-	net.WriteUInt(teams[TEAM_DETECTIVE], 6)
-	net.WriteUInt(teams[TEAM_TRAITOR], 6)
-	net.WriteUInt(teams[TEAM_OTHER], 6)
+	net.WriteUInt(teams[ROLE_TEAM_INNOCENT], 6)
+	net.WriteUInt(teams[ROLE_TEAM_DETECTIVE], 6)
+	net.WriteUInt(teams[ROLE_TEAM_TRAITOR], 6)
+	net.WriteUInt(teams[ROLE_TEAM_INDEPENDENT], 6)
 end
 
 hook.Add("TTTBeginRound", "TTT_RoleCount_Start", function()
