@@ -22,20 +22,20 @@ local spamProtection = {}
 local waitTime = 20 -- time before one of the chat commands can be used again
 
 local function WriteRoleDistribution()
-	local roles = {}
-	roles[ROLE_INNOCENT] = 0
-	roles[ROLE_DETECTIVE] = 0
-	roles[ROLE_TRAITOR] = 0
+	local teams = {}
+	teams[TEAM_INNOCENT] = #player.GetTeamPlayers(ROLE_TEAM_INNOCENT, false, false)
+	teams[TEAM_DETECTIVE] = #player.GetTeamPlayers(ROLE_TEAM_DETECTIVE, false, false)
+	teams[TEAM_TRAITOR] = #player.GetTeamPlayers(ROLE_TEAM_TRAITOR, false, false)
 
-	local role
-	for _, ply in pairs(plyInRound) do
-		role = ply:GetRole()
-		roles[role] = roles[role] + 1
-	end
+	local indep = #player.GetTeamPlayers(ROLE_TEAM_INDEPENDENT, false, false)
+	local monster = #player.GetTeamPlayers(ROLE_TEAM_MONSTER, false, false)
+	local jester = #player.GetTeamPlayers(ROLE_TEAM_JESTER, false, false)
+	teams[TEAM_OTHER] = indep + monster + jester
 
-	net.WriteUInt(roles[ROLE_INNOCENT], 6)
-	net.WriteUInt(roles[ROLE_DETECTIVE], 6)
-	net.WriteUInt(roles[ROLE_TRAITOR], 6)
+	net.WriteUInt(teams[TEAM_INNOCENT], 6)
+	net.WriteUInt(teams[TEAM_DETECTIVE], 6)
+	net.WriteUInt(teams[TEAM_TRAITOR], 6)
+	net.WriteUInt(teams[TEAM_OTHER], 6)
 end
 
 hook.Add("TTTBeginRound", "TTT_RoleCount_Start", function()
@@ -90,7 +90,7 @@ hook.Add("Think", "TTT_CheckForceSpectator", function()
 					plyInRound[index] = nil
 
 					net.Start("TTT_RoleCount_Spectate")
-						net.WriteUInt(ply:GetRole(), 3)
+						net.WriteUInt(ply:GetRoleTeam(), 3)
 					net.Broadcast()
 				end
 			end
@@ -105,7 +105,7 @@ hook.Add("PlayerDisconnected", "TTT_RoleCount_Leave", function(ply)
 			plyInRound[index] = nil
 
 			net.Start("TTT_RoleCount_Leave")
-				net.WriteUInt(ply:GetRole(), 3)
+				net.WriteUInt(ply:GetRoleTeam(), 3)
 				-- Spectator Deathmatch support
 				if (file.Exists("sh_spectator_deathmatch.lua", "LUA")) then
 					net.WriteBool(not ply:IsGhost() and ply:Alive())

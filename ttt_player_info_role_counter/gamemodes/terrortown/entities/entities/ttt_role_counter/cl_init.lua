@@ -3,27 +3,31 @@
 
 local ROLE_SPECTATOR = 3
 -- save colors and strings for easy access
-local roles = {
-	[ROLE_INNOCENT] = {string = " innocent", color = Color(0, 255, 0, 255)},
-	[ROLE_DETECTIVE] = {string = " detective", color = Color(0, 0, 255, 255)},
-	[ROLE_TRAITOR] = {string = " traitor", color = Color(255, 0, 0, 255)},
-	[ROLE_SPECTATOR] = {color = Color(255, 255, 0, 255)}
+local teams = {
+	[TEAM_INNOCENT] = {string = " innocent", color = GetRoleTeamColor(ROLE_TEAM_INNOCENT)},
+	[TEAM_DETECTIVE] = {string = " detective", color = GetRoleTeamColor(ROLE_TEAM_DETECTIVE)},
+	[TEAM_TRAITOR] = {string = " traitor", color = GetRoleTeamColor(ROLE_TEAM_TRAITOR)},
+	[TEAM_OTHER] = {string = " other role", color = GetRoleTeamColor(ROLE_TEAM_INDEPENDENT)},
+	[TEAM_SPECTATOR] = {color = Color(255, 255, 0, 255)}
 }
 
 net.Receive("TTT_RoleCount_Start", function()
 	local innocents = net.ReadUInt(6)
 	local detectives = net.ReadUInt(6)
 	local traitors = net.ReadUInt(6)
+	local others = net.ReadUInt(6)
 	local spectators = net.ReadUInt(6)
 
 	chat.AddText(
-		color_white, "There are ",
-		roles[ROLE_INNOCENT].color, innocents .. roles[ROLE_INNOCENT].string .. "(s)",
-		color_white,", ",
-		roles[ROLE_DETECTIVE].color, detectives .. roles[ROLE_DETECTIVE].string .. "(s)",
-		color_white, " and ",
-		roles[ROLE_TRAITOR].color, traitors .. roles[ROLE_TRAITOR].string .. "(s)",
-		color_white, " this round!"
+			color_white, "There are ",
+			teams[TEAM_INNOCENT].color, innocents .. teams[TEAM_INNOCENT].string .. "(s)",
+			color_white,", ",
+			teams[TEAM_DETECTIVE].color, detectives .. teams[TEAM_DETECTIVE].string .. "(s)",
+			color_white, ", ",
+			teams[TEAM_TRAITOR].color, traitors .. teams[TEAM_TRAITOR].string .. "(s)",
+			color_white, ", and ",
+			teams[TEAM_OTHER].color, others .. teams[TEAM_OTHER].string .. "(s)",
+			color_white, " this round!"
 	)
 
 	if (spectators ~= 1) then
@@ -43,15 +47,18 @@ net.Receive("TTT_RoleCount_Say", function()
 	local innocents = net.ReadUInt(6)
 	local detectives = net.ReadUInt(6)
 	local traitors = net.ReadUInt(6)
+	local others = net.ReadUInt(6)
 
 	chat.AddText(
-		color_white, "There are currently ",
-		roles[ROLE_INNOCENT].color, innocents .. roles[ROLE_INNOCENT].string .. "(s)",
-		color_white,", ",
-		roles[ROLE_DETECTIVE].color, detectives .. roles[ROLE_DETECTIVE].string .. "(s)",
-		color_white, " and ",
-		roles[ROLE_TRAITOR].color, traitors .. roles[ROLE_TRAITOR].string .. "(s)",
-		color_white, " this round!"
+			color_white, "There are currently ",
+			teams[TEAM_INNOCENT].color, innocents .. teams[TEAM_INNOCENT].string .. "(s)",
+			color_white,", ",
+			teams[TEAM_DETECTIVE].color, detectives .. teams[TEAM_DETECTIVE].string .. "(s)",
+			color_white, ", ",
+			teams[TEAM_TRAITOR].color, traitors .. teams[TEAM_TRAITOR].string .. "(s)",
+			color_white, ", and ",
+			teams[TEAM_OTHER].color, others .. teams[TEAM_OTHER].string .. "(s)",
+			color_white, " this round!"
 	)
 end)
 
@@ -63,24 +70,24 @@ net.Receive("TTT_RoleCount_Wait", function()
 	chat.AddText(color_white, "Please wait until the round has started.")
 end)
 
-local function PrintToChat(role, alive, endtext)
+local function PrintToChat(team, alive, endtext)
 	local starttext = "A"
-	if (role == ROLE_INNOCENT) then
+	if (team == ROLE_TEAM_INNOCENT) then
 		starttext = starttext .. "n"
 	end
 
 	if (alive ~= nil) then
 		if (alive) then
-			endtext = endtext .. "he was still alive."
+			endtext = endtext .. "they were still alive."
 		else
-			endtext = endtext .. "he was already dead."
+			endtext = endtext .. "they were already dead."
 		end
 	end
 
 	chat.AddText(
-		color_white, starttext,
-		roles[role].color, roles[role].string,
-		color_white, endtext
+			color_white, starttext,
+			GetRoleTeamColor(team), GetRoleTeamName(team),
+			color_white, endtext
 	)
 end
 
